@@ -100,10 +100,10 @@ try {
 // Define relationships for dropdowns
 $relationships = [
     'pasien' => ['kelurahan_id' => ['table' => 'kelurahan', 'display' => 'nama']],
-    'paramedik' => ['unit_kerja_id' => ['table' => 'unit_kerja', 'display' => 'nama']],
+    'paramedis' => ['unit_kerja_id' => ['table' => 'unit_kerja', 'display' => 'nama']],
     'periksa' => [
         'pasien_id' => ['table' => 'pasien', 'display' => 'nama'],
-        'dokter_id' => ['table' => 'paramedik', 'display' => 'nama', 'condition' => "kategori='dokter'"]
+        'dokter_id' => ['table' => 'paramedis', 'display' => 'nama', 'condition' => "kategori='dokter'"]
     ]
 ];
 
