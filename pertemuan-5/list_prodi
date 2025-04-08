@@ -1,0 +1,49 @@
+<?php
+require_once 'dbkoneksi.php';
+
+// Definisikan query dengan benar
+$sql = "SELECT * FROM prodi ORDER BY thn_masuk DESC";
+
+// Jalankan query
+$rs = $dbh->query($sql);
+
+// Tampilkan hasil query dengan fetchAll
+foreach($rs->fetchAll(PDO::FETCH_OBJ) as $row){
+    echo '<br/>'.$row->nim.' - ' .$row->nama;
+}
+//5 buat steatment
+$stmt = $dbh->prepare($sql);
+//6)jalankan primary
+$stmt->execute($ar_data);
+//redirecr ke halaman list_prodi.php
+header('Location: list_prodi.php')
+?>
+<!-- tampilkan hasil query -->
+<table border="1" width="100%">
+    <tr>
+        <th>No</th>
+        <th>Kode</th>
+        <th>Nama Prodi</th>
+        <th>Kepala Prodi</th>
+        <th>Aksi</th>
+    </tr>
+    <?php
+    $nomor = 1;
+    foreach($rs as $row){
+    ?>
+    <tr>
+        <td><?php echo $nomor; ?></td>
+        <td><?php echo $row->kode; ?></td>
+        <td><?php echo $row->nama; ?></td>
+        <td><?php echo $row->kaprodi; ?></td>
+        <td>
+            <a href="form_prodi.php?id_edit=<?php echo $row->id; ?>">Edit</a>
+            <a href="proses_prodi.php?id_hapus=<?php echo $row->id; ?>">Hapus</a>
+        </td>
+    </tr>
+    <?php 
+    $nomor++;
+    } 
+    ?>
+</table>
+
