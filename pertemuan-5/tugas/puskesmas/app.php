@@ -1,6 +1,14 @@
 <?php
 require "config.php";
 
+function debug_to_console($data) {
+    $output = $data;
+    if (is_array($output))
+        $output = implode(',', $output);
+
+    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
+}
+
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -189,10 +197,15 @@ function getRelatedDisplayValue($dbh, $table, $column, $id) {
                     $value = $editData[$column['Field']] ?? '';
                     $isRequired = $column['Null'] === 'NO' && $column['Extra'] !== 'auto_increment';
                     $fieldType = strpos($column['Type'], 'date') !== false ? 'date' : 'text';
+                    $enumValues = null;
                     if (strpos($column['Type'], 'enum') !== false) {
+                   debug_to_console($column['Type']);
                         preg_match("/enum\('(.+?)'\)/", $column['Type'], $matches);
-                        $enumValues = explode("','", $matches[1]);
+                        if (isset($matches[1])) {
+                            $enumValues = explode("','", $matches[1]);
+                        }
                     }
+
                     ?>
 
                     <div class="form-group">
@@ -258,6 +271,7 @@ function getRelatedDisplayValue($dbh, $table, $column, $id) {
                             </div>
 
                         <?php elseif (strpos($column['Field'], 'telpon') !== false || strpos($column['Field'], 'phone') !== false): ?>
+                        
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
                                     <i class="fas fa-phone icon-spacing"></i>
