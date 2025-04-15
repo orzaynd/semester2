@@ -1,0 +1,101 @@
+Lenovo@LAPTOP-7JLD5I0N c:\xampp
+# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 10
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> CREATE DATABASE dbpuskesmas;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> USE dbpuskesmas;
+Database changed
+MariaDB [dbpuskesmas]> CREATE TABLE kelurahan(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> nama VARCHAR(100) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.043 sec)
+
+MariaDB [dbpuskesmas]> CREATE TABLE unit_kerja(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> nama VARCHAR(100) NOT NULL,
+    -> keterangan VARCHAR(255));
+Query OK, 0 rows affected (0.043 sec)
+
+MariaDB [dbpuskesmas]> CREATE TABLE pasien(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> kode VARCHAR(20)NOT NULL,
+    -> nama VARCHAR(45) NOT NULL,
+    -> tmp_lahir VARCHAR(30) NOT NULL,
+    -> tgl_lahir DATE,
+    -> gender CHAR(1),
+    -> email VARCHAR(100),
+    -> alamat VARCHAR(100), kelurahan_id INT,
+    -> FOREIGN KEY(kelurahan_id)
+    -> REFERENCES kelurahan(id));
+Query OK, 0 rows affected (0.062 sec)
+
+MariaDB [dbpuskesmas]> CREATE TABLE paramedik(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> nama VARCHAR(20) NOT NULL,
+    -> gender CHAR(1) NULL,
+    -> tmp_lahir VARCHAR(30),
+    -> tgl_lahir DATE,
+    -> kategori ENUM("Dokter", "Perawat", "Bidan"),
+    -> telpon VARCHAR(20),
+    -> alamat VARCHAR(100),
+    -> unitkerja_id INT,
+    -> FOREIGN KEY(unitkerja_id)
+    -> REFERENCES unit_kerja(id));
+Query OK, 0 rows affected (0.061 sec)
+
+MariaDB [dbpuskesmas]> CREATE TABLE periksa(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> tanggal DATE,
+    -> berat DOUBLE,
+    -> tinggi DOUBLE,
+    -> tensi VARCHAR(20),
+    -> keterangan VARCHAR (100),
+    -> pasien_id INT,
+    -> paramedik_id INT,
+    -> FOREIGN KEY(pasien_id) REFERENCES pasien(id),
+    -> FOREIGN KEY(paramedik_id) REFERENCES paramedik(id)
+    -> );
+Query OK, 0 rows affected (0.072 sec)
+
+MariaDB [dbpuskesmas]> INSERT INTO kelurahan (nama) VALUES
+    -> ('Sukahati'), ('Bojong Baru'), ('Sukaraja');
+Query OK, 3 rows affected (0.035 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas]> INSERT INTO unit_kerja (id, nama) VALUES
+    -> (1,'THT'), (2,'kandungan'), (3,'anastesi');
+Query OK, 3 rows affected (0.032 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas]> INSERT INTO pasien (kode, nama, tmp_lahir, tgl_lahir, gender, email, alamat, kelurahan_id) VALUES
+    -> ('P001', 'oryza', 'Jakarta', '1990-01-01', 'L', 'ory@mail.com', 'Jl. Melati 1', 1),
+    -> ('P002', 'ijah', 'Bandung', '1992-02-02', 'L', 'ijah@mail.com', 'Jl. Mawar 2', 2),
+    -> ('P003', 'xixixi', 'Surabaya', '1994-03-03', 'P', 'xixixi@mail.com', 'Jl. Kenanga 3', 3),
+Query OK, 3 rows affected (0.037 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas]> INSERT INTO paramedik (nama, gender, tmp_lahir, tgl_lahir, kategori, telpon, alamat, unitkerja_id) VALUES
+    -> ('Indah', 'P', 'Medan', '1987-08-08', 'Perawat', '0812340008', 'Jl. Kutilang', 1),
+    -> ('Nadin', 'P', 'Yogya', '1992-07-09', 'Bidan', '0812340009', 'Jl. Cucak Rowo', 2),
+    -> ('Rany', 'P', 'Solo', '1984-10-10', 'Dokter', '0812340010', 'Jl. Kakatua', 3);
+Query OK, 3 rows affected (0.032 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas]> INSERT INTO periksa (tanggal, berat, tinggi, tensi, keterangan, pasien_id, dokter_id) VALUES
+    -> ('2025-01-01', 60.5, 170, '120/80', 'Sakit Hati', 1, 1),
+    -> ('2025-01-02', 55.0, 165, '170/70', 'Bulol', 2, 2),
+    -> ('2025-01-03', 62.3, 172, '150/85', 'Gamon', 3, 3),
+Query OK, 3 rows affected (0.018 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas]>
